@@ -1,4 +1,4 @@
-# 🤖 Smart-Screener PME
+# 🤖 HR-Tech AI Resume Screener | Assistant de Recrutement IA (RAG & LLM)
 
 [![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](LE_LIEN_DE_VOTRE_APP_ICI)
 
