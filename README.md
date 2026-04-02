@@ -1,8 +1,8 @@
 # 🤖 HR-Tech AI Resume Screener | Assistant de Recrutement IA (RAG & LLM)
 
-[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](LE_LIEN_DE_VOTRE_APP_ICI)
+[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://smart-screener-ofk-zpgy6gg8dn56wvapifnxxc.streamlit.app/)
 
-> **Essayez l'application en direct ici : [Lancer la Démo](LE_LIEN_DE_VOTRE_APP_ICI)**
+> **Essayez l'application en direct ici : [Lancer la Démo](https://smart-screener-ofk-zpgy6gg8dn56wvapifnxxc.streamlit.app/)**
 
 ### Assistant de Recrutement propulsé par l'IA
 
