@@ -32,3 +32,10 @@
 1. Cloner le repo :
 ```bash
 git clone [https://github.com/VOTRE-PSEUDO/smart-screener.git](https://github.com/VOTRE-PSEUDO/smart-screener.git)
+```
+## 👤 Auteur
+
+**Oumar** - *Data Product Manager*
+> J'aide les décideurs à transformer leurs données en outils de pilotage stratégique.
+
+[LinkedIn](https://www.linkedin.com/in/oumarfodek/)
