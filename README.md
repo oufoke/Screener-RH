@@ -2,6 +2,9 @@
 
 [![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://smart-screener-ofk-zpgy6gg8dn56wvapifnxxc.streamlit.app/)
 
+> *🇺🇸 An AI-powered application using RAG architecture to parse, score, and analyze resumes.*
+> *🇫🇷 Une application IA utilisant l'architecture RAG pour analyser, scorer et synthétiser les CVs.*
+
 > **Essayez l'application en direct ici : [Lancer la Démo](https://smart-screener-ofk-zpgy6gg8dn56wvapifnxxc.streamlit.app/)**
 
 ### Assistant de Recrutement propulsé par l'IA
