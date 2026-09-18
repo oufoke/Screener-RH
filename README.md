@@ -1,41 +1,107 @@
-# 🤖 HR-Tech AI Resume Screener | Assistant de Recrutement IA (RAG & LLM) 🟢 Live App
+# Screener RH — Lire un CV face à une offre
 
-[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://smart-screener-ofk-zpgy6gg8dn56wvapifnxxc.streamlit.app/)
+> 🇫🇷 Un assistant qui lit un CV face à une offre, relève les écarts et prépare l'entretien. Application publique, démonstrateur.
+> 🇬🇧 An assistant that reads a CV against a job description, surfaces gaps and prepares the interview. Public app, demonstrator.
 
-> *🇺🇸 An AI-powered application using RAG architecture to parse, score, and analyze resumes.*
-> *🇫🇷 Une application IA utilisant l'architecture RAG pour analyser, scorer et synthétiser les CVs.*
+**[Lancer la démo](https://smart-screener-ofk-zpgy6gg8dn56wvapifnxxc.streamlit.app/)**
 
-> **Essayez l'application en direct ici : [Lancer la Démo](https://smart-screener-ofk-zpgy6gg8dn56wvapifnxxc.streamlit.app/)**
+---
 
-### Assistant de Recrutement propulsé par l'IA
+## Le problème
 
-**Le Problème :** Les dirigeants de PME passent trop de temps à trier des CVs sans avoir d'expertise RH.
-**La Solution :** Une application qui analyse instantanément la compatibilité d'un CV avec une offre d'emploi et génère un guide d'entretien sur-mesure.
+Trier des candidatures prend du temps, et deux personnes lisant le même CV n'en retiennent pas la même chose. Dans une structure sans fonction RH dédiée, cette lecture échoit à quelqu'un dont ce n'est pas le métier.
 
-![Aperçu de l'application](demo_screenshot.png)
+---
 
-### 🛠️ Stack Technique
-* **Langage :** Python 3.10+
-* **Interface :** Streamlit
-* **IA / NLP :** OpenAI API (GPT-4o-mini)
-* **Parsing :** PyPDF2
-* **Architecture :** RAG simplifié (Retrieval Augmented Generation)
+## Ce que fait le système
 
-### ✨ Fonctionnalités
-1.  **Parsing PDF :** Extraction automatique du texte des CVs.
-2.  **Scoring Intelligent :** Évaluation sur 100 basée sur des critères sémantiques (pas juste des mots-clés).
-3.  **Synthèse RH :** Points forts et points de vigilance.
-4.  **Assistant d'Entretien :** Génération de questions contextuelles pour creuser les lacunes du candidat.
+Extraction du texte du CV, comparaison avec l'offre, restitution en trois blocs : points d'adéquation, points de vigilance, et questions à poser en entretien.
 
-### 🚀 Comment lancer le projet
+**Ce n'est pas un outil de sélection.** La distinction n'est pas rhétorique — voir la section conformité.
 
-1. Cloner le repo :
-```bash
-git clone [https://github.com/VOTRE-PSEUDO/smart-screener.git](https://github.com/VOTRE-PSEUDO/smart-screener.git)
-```
-## 👤 Auteur
+### Pourquoi ce n'est pas du RAG
 
-**Oumar** - *Data Product Manager*
-> J'aide les décideurs à transformer leurs données en outils de pilotage stratégique.
+Une architecture RAG découpe un corpus en fragments, les indexe sous forme de vecteurs, puis récupère les plus proches d'une question avant de les injecter dans le prompt. On le fait quand le corpus dépasse la fenêtre du modèle, quand il change souvent, ou quand il faut citer la source d'une réponse.
 
-[LinkedIn](https://www.linkedin.com/in/oumarfodek/)
+Aucune de ces trois conditions n'est remplie par un CV isolé : il tient entièrement dans la fenêtre. Le document est donc **injecté directement en contexte**. Ajouter un index aurait été de la complexité sans gain.
+
+*Note : une version antérieure de ce dépôt décrivait l'architecture comme « RAG simplifié ». C'était une erreur de dénomination, corrigée ici.*
+
+---
+
+## Stack
+
+* **Langage** — Python
+* **Modèle** — GPT-4o-mini via l'API OpenAI
+* **Orchestration** — LangChain
+* **Extraction PDF** — PyPDF2
+* **Interface** — Streamlit
+
+---
+
+## Décisions & arbitrages
+
+*Section rétrospective.*
+
+### Injection directe plutôt que RAG
+
+**Contexte.** Corpus d'un document, largement inférieur à la fenêtre du modèle.
+**Décision.** Injection directe.
+**Ce que ça coûte.** Le système ne monte pas en charge sur un corpus de plusieurs centaines de CV comparés simultanément. Ce n'était pas le besoin.
+**Ce que ça évite.** Un index à maintenir, une étape de récupération à évaluer, et une dépendance supplémentaire — pour zéro gain.
+
+### Un modèle économique plutôt qu'un modèle performant
+
+**Contexte.** Application publique, à coût d'usage non maîtrisé.
+**Décision.** GPT-4o-mini.
+**Ce que ça coûte.** Une qualité d'analyse inférieure à un modèle plus capable, sur les CV atypiques notamment.
+**Ce qui manque pour arbitrer sérieusement.** Le coût par exécution n'a jamais été mesuré. La décision a été prise sur une intuition de coût, pas sur un chiffre.
+
+### Une note sur cent
+
+**Décision prise, et que je considère aujourd'hui comme discutable.** Produire une note numérique donne une illusion de précision : le modèle produit un nombre parce qu'on lui en demande un, sans que ce nombre soit stable ni comparable entre candidats.
+**Ce que je ferais autrement.** Restituer les écarts et les points de vigilance sans agréger en score. L'extraction structurée fait gagner du temps sans porter de jugement — et sort du périmètre réglementaire le plus contraint.
+
+---
+
+## Conformité — à lire avant tout usage réel
+
+Le tri de candidatures est un usage **explicitement identifié comme à haut risque** par le règlement européen sur l'intelligence artificielle. Recrutement, sélection et évaluation de personnes y sont nommés.
+
+Ce dépôt est un démonstrateur et n'est pas destiné à un usage en production. Une mise en production supposerait au minimum :
+
+* une information du candidat sur l'intervention d'un système automatisé ;
+* une supervision humaine formalisée, avec une décision qui reste humaine ;
+* une documentation du système, de ses données et de ses limites ;
+* des tests de biais sur les sorties, par sous-population ;
+* une traçabilité permettant de rejouer une évaluation en cas de contestation.
+
+Aucun de ces éléments n'est présent ici.
+
+---
+
+## Limites connues
+
+* **Le système n'est pas déterministe.** Le même CV soumis deux fois peut recevoir deux analyses différentes. Sur un outil qui compare des candidats, c'est un défaut structurel.
+* **Les biais passent par des signaux indirects.** Prénom, établissement, formulation, langue. Un modèle de langage reproduit des régularités apprises sur des corpus où ces signaux corrèlent avec des jugements.
+* **L'extraction PDF est un point de rupture silencieux.** Un CV en colonnes ou scanné produit un texte incohérent que le modèle interprète quand même, sans signaler le problème.
+* **La note agrégée n'est pas fondée.** Voir la section décisions.
+
+---
+
+## Ce qui n'a pas été mesuré
+
+* La stabilité entre deux exécutions sur un même CV
+* L'accord entre les sorties du système et le jugement d'un recruteur humain
+* La sensibilité aux variables indirectes — le test serait pourtant simple : un même CV décliné en variantes ne changeant que le prénom ou l'établissement, et on observe si l'analyse bouge
+* Le coût et la latence par exécution
+
+---
+
+## Difficultés rencontrées
+
+* **L'extraction PDF fiable** a représenté une part de travail disproportionnée par rapport à la partie modèle — un schéma récurrent sur ce type de projet.
+
+---
+
+*Oumar Fodé KEBE — [oufoke.github.io](https://oufoke.github.io) · [LinkedIn](https://www.linkedin.com/in/oumarfodek/)*
